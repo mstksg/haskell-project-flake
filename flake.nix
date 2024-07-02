@@ -76,7 +76,7 @@
                   program = "${runFormat}/bin/formatHaskell.sh";
                 };
               };
-              devShells = pkgs.lib.mapAttrsToList (_: project: project.flake'.devShells.default) projects;
+              devShells = builtins.mapAttrs (_: project: project.flake'.devShells.default) projects;
               checks = projects.default.flake'.checks // {
                 inherit checkFormat;
               };
