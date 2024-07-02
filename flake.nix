@@ -73,7 +73,7 @@
                   program = "${runFormat}/bin/formatHaskell.sh";
                 };
               };
-              checks = projects.default.checks // {
+              checks = projects.default.flake'.checks // {
                 inherit checkFormat;
               };
             };
