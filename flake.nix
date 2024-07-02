@@ -84,7 +84,7 @@
         };
       in
       rec {
-        overlays.default = (import nixpkgs { }).lib.fixedPoints.composeExtensions haskellNix.overlay overlay;
+        overlays.default = (import nixpkgs { inherit system; }).lib.fixedPoints.composeExtensions haskellNix.overlay overlay;
         legacyPackages = import nixpkgs {
           inherit system;
           inherit (haskellNix) config;
