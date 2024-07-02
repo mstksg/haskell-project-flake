@@ -54,7 +54,7 @@
                     fourmolu --mode inplace $(git ls-files '*.hs')
                   '';
                 };
-              packages =
+              packagesByCompiler =
                 builtins.mapAttrs
                   (v: project:
                     project.flake'.packages
@@ -69,7 +69,7 @@
             in
             rec {
               inherit projects;
-              packages = packages.default // { default = packages.default.all; withCompiler = packages; };
+              packages = packagesByCompiler.default // { default = packages.default.all; withCompiler = packages; };
               apps = {
                 format = {
                   type = "app";
@@ -84,7 +84,7 @@
         };
       in
       rec {
-        overlays.default = (import nixpkgs { inherit system; }).lib.fixedPoints.composeExtensions haskellNix.overlay overlay;
+        overlays.default = (import nixpkgs { }).lib.fixedPoints.composeExtensions haskellNix.overlay overlay;
         legacyPackages = import nixpkgs {
           inherit system;
           inherit (haskellNix) config;
