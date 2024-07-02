@@ -10,11 +10,6 @@
   outputs = { self, nixpkgs, haskellNix, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-          inherit (haskellNix) config;
-          overlays = [ haskellNix.overlay ];
-        };
         overlay = final: pkgs: {
           haskell-project-flake = { name, src, defaultCompiler, shellOverrides ? { }, excludeCompilerMajors ? [ ] }:
             let
@@ -85,7 +80,7 @@
         };
       in
       rec {
-        overlays.default = overlay;
+        overlays.default = legacyPackages.lib.fixed-points.composeExtensions haskellNix.overlay overlay;
         legacyPackages = import nixpkgs {
           inherit system;
           inherit (haskellNix) config;
