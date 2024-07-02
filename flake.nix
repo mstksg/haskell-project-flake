@@ -33,7 +33,10 @@
                     pkgs.haskell-nix.project' {
                       inherit name src;
                       compiler-nix-name = c;
-                      shell = if n == "default" then pkgs.lib.attrsets.recursiveUpdate shell else { };
+                      shell = if n == "default" then shell else
+                      shell // {
+                        tools = builtins.intersectAttrs { cabal = { }; } shell.tools;
+                      };
                     }
                   )
                   compilers;
@@ -73,6 +76,7 @@
                   program = "${runFormat}/bin/formatHaskell.sh";
                 };
               };
+              devShells = pkgs.lib.mapAttrsToList (_: project: project.flake'.devShells.default) projects;
               checks = projects.default.flake'.checks // {
                 inherit checkFormat;
               };
