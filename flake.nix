@@ -30,7 +30,7 @@
               projects =
                 builtins.mapAttrs
                   (n: c:
-                    pkgs.haskell-nix-project' {
+                    pkgs.haskell-nix.project' {
                       inherit name src;
                       compiler-nix-name = c;
                       shell = if n == "default" then pkgs.lib.attrsets.recursiveUpdate shell else { };
