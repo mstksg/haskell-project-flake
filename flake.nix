@@ -69,7 +69,15 @@
             in
             rec {
               inherit projects;
-              packages = packagesByCompiler.default // { default = packages.default.all; withCompiler = packages; };
+              packages = packagesByCompiler.default // {
+                default =
+                  packages.default.all;
+                withCompiler = packages;
+                everyCompiler = pkgs.symlinkJoin {
+                  name = "${name}-every-compiler";
+                  paths = pkgs.lib.mapAttrsToList (_: package: package.all) packages;
+                };
+              };
               apps = {
                 format = {
                   type = "app";
