@@ -27,7 +27,7 @@
         }
       ) // rec {
       templates.haskell-project-flake = {
-        path = ./templates/haskell-project-flake;
+        path = ./template/haskell-project-flake;
         description = "Set up haskell project infrastructure";
       };
       templates.default = templates.haskell-project-flake;
