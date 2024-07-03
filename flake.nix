@@ -43,7 +43,7 @@
               checkFormat = pkgs.runCommandLocal "checkFormat"
                 {
                   inherit src;
-                  nativeBuildInputs = [ projects.default.tool "fourmolu" shell.tools.fourmolu ];
+                  nativeBuildInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) ];
                 } "fourmolu --mode check $src > $out";
               runFormat =
                 pkgs.writeShellApplication {
