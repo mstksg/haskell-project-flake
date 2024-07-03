@@ -59,7 +59,6 @@ let
 in
 rec {
   inherit projects packagesByCompiler;
-  # TODO: add the checks for other compilers to be run by CI
   packages = builtins.mapAttrs (_: p: p.all) packagesByCompiler // {
     default =
       packagesByCompiler.default.all;
@@ -68,7 +67,8 @@ rec {
       paths = pkgs.lib.mapAttrsToList (_: package: package.all) packagesByCompiler;
     };
   };
-  # TODO: add actions for uploading to hackage
+  # TODO: add actions for making a release (parsing changelog?) and pushing to
+  # hackage
   apps = {
     format = {
       type = "app";
