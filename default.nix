@@ -27,10 +27,11 @@ let
   checkFormat = pkgs.runCommandLocal "checkFormat"
     {
       inherit src;
-      nativeBuildInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) ];
+      nativeBuildInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) pkgs.haskellPackages.cabal-fmt ];
     } ''
     cd $src
-    fourmolu --mode check . > $out
+    fourmolu --mode check . >> $out
+    cabal-fmt --check $(find . -type f -name "*.cabal") >> $out
   '';
   runFormat =
     pkgs.writeShellApplication {
@@ -39,6 +40,7 @@ let
       text = ''
         # shellcheck disable=SC2046
         fourmolu --mode inplace $(git ls-files '*.hs')
+        cabal-fmt --inplace $(git ls-files '*.cabal')
       '';
     };
   packagesByCompiler =
@@ -65,6 +67,7 @@ rec {
       paths = pkgs.lib.mapAttrsToList (_: package: package.all) packagesByCompiler;
     };
   };
+  # TODO: add actions for uploading to hackage
   apps = {
     format = {
       type = "app";
