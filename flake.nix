@@ -33,7 +33,7 @@
                     pkgs.haskell-nix.project' {
                       inherit name src;
                       compiler-nix-name = c;
-                      shell = if n == "default" then shell else {};
+                      shell = if n == "default" then shell else { };
                     }
                   )
                   compilers;
@@ -41,7 +41,10 @@
                 {
                   inherit src;
                   nativeBuildInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) ];
-                } "fourmolu --mode check $src > $out";
+                } ''
+                cd $src
+                fourmolu --mode check . > $out
+              '';
               runFormat =
                 pkgs.writeShellApplication {
                   name = "formatHaskell.sh";
