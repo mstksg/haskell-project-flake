@@ -40,6 +40,7 @@ let
       text = ''
         # shellcheck disable=SC2046
         fourmolu --mode inplace $(git ls-files '*.hs')
+        # shellcheck disable=SC2046
         cabal-fmt --inplace $(git ls-files '*.cabal')
       '';
     };
