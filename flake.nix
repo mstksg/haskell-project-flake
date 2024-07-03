@@ -48,7 +48,7 @@
               runFormat =
                 pkgs.writeShellApplication {
                   name = "formatHaskell.sh";
-                  runtimeInputs = [ projects.default.tool "fourmolu" shell.tools.fourmolu ];
+                  runtimeInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) ];
                   text = ''
                     # shellcheck disable=SC2046
                     fourmolu --mode inplace $(git ls-files '*.hs')
