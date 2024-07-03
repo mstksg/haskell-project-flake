@@ -69,7 +69,7 @@
             in
             rec {
               inherit projects packagesByCompiler;
-              packages = packagesByCompiler // {
+              packages = builtins.mapAttrs (_: p: p.all) packagesByCompiler // {
                 default =
                   packagesByCompiler.default.all;
                 everyCompiler = pkgs.symlinkJoin {
