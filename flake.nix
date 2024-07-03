@@ -71,11 +71,11 @@
               inherit projects;
               packages = packagesByCompiler.default // {
                 default =
-                  packages.default.all;
-                withCompiler = packages;
+                  packagesByCompiler.default.all;
+                withCompiler = packagesByCompiler;
                 everyCompiler = pkgs.symlinkJoin {
                   name = "${name}-every-compiler";
-                  paths = pkgs.lib.mapAttrsToList (_: package: package.all) packages;
+                  paths = pkgs.lib.mapAttrsToList (_: package: package.all) packagesByCompiler;
                 };
               };
               apps = {
