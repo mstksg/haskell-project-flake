@@ -69,7 +69,7 @@
             in
             rec {
               inherit projects packagesByCompiler;
-              packages = packagesByCompiler.default // {
+              packages = packagesByCompiler // {
                 default =
                   packagesByCompiler.default.all;
                 everyCompiler = pkgs.symlinkJoin {
