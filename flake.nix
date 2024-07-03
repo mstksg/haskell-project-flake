@@ -68,7 +68,7 @@
                   projects;
             in
             rec {
-              inherit projects;
+              inherit projects packagesByCompiler;
               packages = packagesByCompiler.default // {
                 default =
                   packagesByCompiler.default.all;
