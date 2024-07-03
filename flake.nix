@@ -33,10 +33,7 @@
                     pkgs.haskell-nix.project' {
                       inherit name src;
                       compiler-nix-name = c;
-                      shell = if n == "default" then shell else
-                      shell // {
-                        tools = builtins.intersectAttrs { cabal = { }; } shell.tools;
-                      };
+                      shell = if n == "default" then shell else {};
                     }
                   )
                   compilers;
