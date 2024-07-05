@@ -27,11 +27,14 @@ let
   checkFormat = pkgs.runCommandLocal "checkFormat"
     {
       inherit src;
-      nativeBuildInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) pkgs.haskellPackages.cabal-fmt ];
+      nativeBuildInputs =
+        let tools = projects.default.tools { hlint = { }; fourmolu = { }; };
+        in [ tools.fourmolu tools.hlint pkgs.haskellPackages.cabal-fmt ];
     } ''
     cd $src
     fourmolu --mode check . >> $out
     cabal-fmt --check $(find . -type f -name "*.cabal") >> $out
+    hlint .
   '';
   runFormat =
     pkgs.writeShellApplication {
