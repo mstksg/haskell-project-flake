@@ -34,7 +34,7 @@ let
     cd $src
     fourmolu --mode check . >> $out
     cabal-fmt --check $(find . -type f -name "*.cabal") >> $out
-    hlint .
+    hlint . >> $out
   '';
   runFormat =
     pkgs.writeShellApplication {
