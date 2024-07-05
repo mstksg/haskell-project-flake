@@ -32,9 +32,10 @@ let
         in [ tools.fourmolu tools.hlint pkgs.haskellPackages.cabal-fmt ];
     } ''
     cd $src
-    fourmolu --mode check . >> $out
-    cabal-fmt --check $(find . -type f -name "*.cabal") >> $out
-    hlint . >> $out
+    fourmolu --mode check .
+    cabal-fmt --check $(find . -type f -name "*.cabal")
+    hlint .
+    touch $out
   '';
   runFormat =
     pkgs.writeShellApplication {
