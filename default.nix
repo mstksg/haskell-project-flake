@@ -19,7 +19,8 @@ let
         pkgs.haskell-nix.project' {
           inherit name src;
           compiler-nix-name = c;
-          shell = if n == "default" then shell else { tools.cabal = { }; };
+          # TODO: find a way to get the correct cabal
+          shell = if n == "default" then shell else { };
         }
       )
       compilers;
@@ -96,7 +97,7 @@ rec {
   devShells = builtins.mapAttrs
     (v: project: project.shellFor ({
       buildInputs = [ runFormat runCheck ];
-    } // (if v == "default" then shell else { tools.cabal = { }; })))
+    } // (if v == "default" then shell else { })))
     projects;
   checks = projects.default.flake'.checks // {
     inherit checkFormat;
