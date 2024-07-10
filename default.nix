@@ -5,7 +5,6 @@ let
   shell =
     pkgs.lib.attrsets.recursiveUpdate
       {
-        withHoogle = false;
         tools = {
           cabal = { };
           hlint = { };
@@ -20,11 +19,11 @@ let
         pkgs.haskell-nix.project' {
           inherit name src;
           compiler-nix-name = c;
-          shell = if n == "default" then shell else { };
+          shell = if n == "default" then shell else { tools.cabal = { }; };
         }
       )
       compilers;
-  checkFormat = pkgs.runCommandLocal "checkFormat"
+  checkFormat = pkgs.runCommandLocal "checkHaskell"
     {
       inherit src;
       nativeBuildInputs =
@@ -37,9 +36,24 @@ let
     hlint .
     touch $out
   '';
+  runCheck =
+    pkgs.writeShellApplication {
+      name = "check-haskell";
+      runtimeInputs =
+        let tools = projects.default.tools { hlint = { }; fourmolu = { }; };
+        in [ tools.fourmolu tools.hlint pkgs.haskellPackages.cabal-fmt ];
+      text = ''
+        # shellcheck disable=SC2046
+        fourmolu --mode check $(git ls-files '*.hs')
+        # shellcheck disable=SC2046
+        cabal-fmt --check $(git ls-files '*.cabal')
+        # shellcheck disable=SC2046
+        hlint $(git ls-files '*.hs')
+      '';
+    };
   runFormat =
     pkgs.writeShellApplication {
-      name = "formatHaskell.sh";
+      name = "format-haskell";
       runtimeInputs = [ (projects.default.tool "fourmolu" shell.tools.fourmolu) ];
       text = ''
         # shellcheck disable=SC2046
@@ -76,10 +90,14 @@ rec {
   apps = {
     format = {
       type = "app";
-      program = "${runFormat}/bin/formatHaskell.sh";
+      program = "${runFormat}/bin/format-haskell.sh";
     };
   };
-  devShells = builtins.mapAttrs (_: project: project.flake'.devShells.default) projects;
+  devShells = builtins.mapAttrs
+    (v: project: project.shellFor ({
+      buildInputs = [ runFormat runCheck ];
+    } // (if v == "default" then shell else { tools.cabal = { }; })))
+    projects;
   checks = projects.default.flake'.checks // {
     inherit checkFormat;
   };
