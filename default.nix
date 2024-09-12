@@ -95,9 +95,11 @@ rec {
     };
   };
   devShells = builtins.mapAttrs
-    (v: project: project.shellFor ({
-      buildInputs = [ runFormat runCheck ];
-    } // (if v == "default" then shell else { })))
+    (v: project: project.shellFor (
+      if v == "default" then shell // {
+        buildInputs = [ runFormat runCheck ];
+      } else { }
+    ))
     projects;
   checks = projects.default.flake'.checks // {
     inherit checkFormat;
