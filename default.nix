@@ -13,6 +13,12 @@ let
         };
       }
       shellOverrides;
+  bareShell =
+    pkgs.lib.attrsets.recursiveUpdate
+      {
+        tools = { cabal = { }; };
+      }
+      shellOverrides;
   projects =
     builtins.mapAttrs
       (n: c:
@@ -98,7 +104,7 @@ rec {
     (v: project: project.shellFor (
       if v == "default" then shell // {
         buildInputs = [ runFormat runCheck ];
-      } else { }
+      } else bareShell
     ))
     projects;
   checks = projects.default.flake'.checks // {
