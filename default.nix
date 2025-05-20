@@ -76,7 +76,9 @@ let
         // {
           all = pkgs.symlinkJoin {
             name = "${name}-${v}";
-            paths = pkgs.lib.mapAttrsToList (_: package: package) project.flake'.packages ++ [ project.flake'.checks ];
+            paths = pkgs.lib.mapAttrsToList (_: package: package)
+              project.flake'.packages
+            ++ pkgs.lib.mapAttrsToList (_: check: check) project.flake'.checks;
           };
         }
       )
