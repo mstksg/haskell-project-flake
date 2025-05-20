@@ -99,7 +99,7 @@ rec {
   apps = {
     format = {
       type = "app";
-      program = "${runFormat}/bin/format-haskell.sh";
+      program = "${runFormat}/bin/format-haskell";
     };
   };
   devShells = builtins.mapAttrs
